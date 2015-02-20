@@ -1,0 +1,77 @@
+<html>
+	<head>
+		<title>BioViz Assig3</title>
+		<script src='http://d3js.org/d3.v3.min.js' charset='utf-8'></script>
+		<script src='d3.parcoords.js'></script>
+		<script src='divgrid.js'></script>
+		<link rel='stylesheet' type='text/css' href='d3.parcoords.css'>
+	</head>
+	<body>
+		<div id='Assig3'>
+			<h1>Biovisualization Assignment 3</h1>
+			<h2>Greg Giola&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Breast Cancer Data</h2>
+		</div>
+		<div id='graph' class='parcoords' style='height:300px;'></div>
+		<script id='brushing'>	
+			var blue_to_red = d3.scale.linear()
+				.domain([2, 4])
+				.range(['blue', 'red'])
+				.interpolate(d3.interpolateLab);
+
+			var color = function(d) { return blue_to_red(d['Class']); };
+
+			var parcoords = d3.parcoords()('#graph')
+				.color(color)
+				.alpha(0.4)
+				.margin({
+					top: 36,
+					left: 0,
+					right: 0,
+					bottom: 16
+				});
+			
+			d3.csv('data/breast-cancer-wisconsin.csv', function(data) {
+				parcoords
+				.data(data)
+				.smoothness(0)
+				.showControlPoints(false)
+				.hideAxis(['Class'])
+				.render()
+				.brushMode('1D-axes')
+				.reorderable()
+				.interactive();
+
+			});
+			
+			var svg = d3.select('#Assig3').append('svg')
+				.attr('height', 50)
+				.attr('width', 500);
+				
+			var key = svg.append('g')
+				.attr('transform', 'translate(0,20)')
+				.attr('id', 'key');
+			key.append('text')
+				.attr('x', 40)
+				.attr('y', 0)
+				.text('Class = 2');
+			key.append('line')
+				.attr('x1', 0)
+				.attr('x2', 35)
+				.attr('y1', -5)
+				.attr('y2', -5)
+				.attr('stroke-width', 5)
+				.attr('stroke', 'blue');
+			key.append('text')
+				.attr('x', 40)
+				.attr('y', 20)
+				.text('Class = 4');
+			key.append('line')
+				.attr('x1', 0)
+				.attr('x2', 35)
+				.attr('y1', 15)
+				.attr('y2', 15)
+				.attr('stroke-width', 5)
+				.attr('stroke', 'red');
+		</script>
+	</body>
+</html>
